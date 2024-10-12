@@ -31,10 +31,12 @@
 .tinderCard img {
   max-width: 100%;
   height: auto;
+  pointer-events: none; /* Ensure image doesn't block the swipe */
 }
 
 .tinderCard h3,
 .tinderCard p {
   margin: 16px;
   text-align: center;
+  pointer-events: none; /* Ensure text doesn't block the swipe */
 }
