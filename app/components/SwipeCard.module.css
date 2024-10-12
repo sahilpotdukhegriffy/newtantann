@@ -1,0 +1,40 @@
+.tinder {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* This hides any overflow when the card is swiped */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.tinderCard {
+  width: 90vw;
+  max-width: 400px;
+  height: 70vh;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: absolute;
+  will-change: transform;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.tinderCard.moving {
+  transition: none; /* Disable transition while moving to make the swipe feel responsive */
+}
+
+.tinderCard img {
+  max-width: 100%;
+  height: auto;
+}
+
+.tinderCard h3,
+.tinderCard p {
+  margin: 16px;
+  text-align: center;
+}

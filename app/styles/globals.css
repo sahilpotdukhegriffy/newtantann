@@ -1,0 +1,14 @@
+body {
+  background-color: #f0f0f0; /* Ensure you have a neutral background */
+  font-family: Arial, sans-serif;
+}
+
+.tinder {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
