@@ -8,17 +8,18 @@ import { griffyApi } from "../axios/axiosInstance";
 import { openHeaders } from "../axios/Headers";
 
 // Define the Event interface
-export interface Event {
+interface Poll {
   id: number;
-  creator_id: string;
   title: string;
-  subtitle: string;
   description: string;
   image_url: string;
 }
+interface FeedResponse {
+  polls: Poll[];
+}
 
 const TinderCards: React.FC = () => {
-  const [eventData, setEventData] = useState<Event[]>([]); // State to store the events
+  const [eventData, setEventData] = useState<Poll[]>([]);
 
   useEffect(() => {
     getFeed(); // Fetch the events on component mount
@@ -27,7 +28,7 @@ const TinderCards: React.FC = () => {
   const getFeed = async () => {
     try {
       griffyApi.setHeaders(openHeaders); // Ensure headers are set
-      const response = await griffyApi.get<any>("/feed/get");
+      const response = await griffyApi.get<FeedResponse>("/feed/get");
       setEventData(response.data.polls); // Set the events data
       console.log(response);
     } catch (error) {

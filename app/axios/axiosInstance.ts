@@ -14,6 +14,7 @@ export class GriffyAPI {
     });
   }
 
+  // GET request
   public async get<T>(
     url: string,
     config?: AxiosRequestConfig
@@ -21,14 +22,16 @@ export class GriffyAPI {
     return this.axiosInstance.get<T>(url, config);
   }
 
-  public async post<T>(
+  // POST request with generic data type
+  public async post<T, D = unknown>(
     url: string,
-    data: any,
+    data: D,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<T>> {
     return this.axiosInstance.post<T>(url, data, config);
   }
 
+  // Set headers
   public setHeaders(headers: Record<string, string>): void {
     Object.assign(this.axiosInstance.defaults.headers, headers);
   }
