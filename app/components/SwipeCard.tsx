@@ -10,16 +10,31 @@ interface SwipeCardProps {
 const SwipeCard: React.FC<SwipeCardProps> = ({ image, title, description }) => {
   return (
     <div className={styles.tinderCard}>
-      <img src={image} alt={title} />
+      {/* Card Image */}
+      <img src={image} alt={title} className={styles.cardImage} />
+
+      {/* Card Title and Description */}
       <h3>{title}</h3>
       <p>{description}</p>
 
-      {/* Heart and Cross Icons */}
-      <div className="heart-icon">
-        <i className="fas fa-heart"></i>
+      {/* YES and NO Buttons */}
+      <div className={styles.buttonsContainer}>
+        <button className={`${styles.button} ${styles.no}`}>
+          <span>NO</span>
+          <span>Potential Payout x1.75</span>
+        </button>
+        <button className={`${styles.button} ${styles.yes}`}>
+          <span>YES</span>
+          <span>Potential Payout x1.75</span>
+        </button>
       </div>
-      <div className="cross-icon">
-        <i className="fas fa-times"></i>
+
+      {/* Heart and Cross Icons */}
+      <div className={`${styles.heartIcon} heart-icon`}>
+        <i className="fas fa-heart"></i> {/* FontAwesome Heart Icon */}
+      </div>
+      <div className={`${styles.crossIcon} cross-icon`}>
+        <i className="fas fa-times"></i> {/* FontAwesome Cross Icon */}
       </div>
     </div>
   );

@@ -1,34 +1,40 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import SwipeCard from "./SwipeCard"; // Import the individual card component
 import Hammer from "hammerjs";
-import styles from "./SwipeCard.module.css"; // Import the styles for Tinder cards
+import styles from "./SwipeCard.module.css";
+import { griffyApi } from "../axios/axiosInstance";
+import { openHeaders } from "../axios/Headers";
 
-const cardData = [
-  {
-    image: "https://placeimg.com/600/300/people",
-    title: "Demo Card 1",
-    description: "This is a demo for Tinder-like swipe cards",
-  },
-  {
-    image: "https://placeimg.com/600/300/animals",
-    title: "Demo Card 2",
-    description: "This is a demo for Tinder-like swipe cards",
-  },
-  {
-    image: "https://placeimg.com/600/300/nature",
-    title: "Demo Card 3",
-    description: "This is a demo for Tinder-like swipe cards",
-  },
-  {
-    image: "https://placeimg.com/600/300/tech",
-    title: "Demo Card 4",
-    description: "This is a demo for Tinder-like swipe cards",
-  },
-];
+// Define the Event interface
+export interface Event {
+  id: number;
+  creator_id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  image_url: string;
+}
 
 const TinderCards: React.FC = () => {
+  const [eventData, setEventData] = useState<Event[]>([]); // State to store the events
+
+  useEffect(() => {
+    getFeed(); // Fetch the events on component mount
+  }, []);
+
+  const getFeed = async () => {
+    try {
+      griffyApi.setHeaders(openHeaders); // Ensure headers are set
+      const response = await griffyApi.get<any>("/feed/get");
+      setEventData(response.data.polls); // Set the events data
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching the feed:", error);
+    }
+  };
+
   useEffect(() => {
     const allCards = document.querySelectorAll(`.${styles.tinderCard}`);
 
@@ -131,17 +137,17 @@ const TinderCards: React.FC = () => {
         }
       });
     });
-  }, []);
+  }, [eventData]); // Add eventData to the dependency array to re-run the effect when new data is fetched
 
   return (
     <div className={styles.tinder}>
       <div className={styles.cards}>
-        {cardData.map((card, index) => (
+        {eventData.map((event) => (
           <SwipeCard
-            key={index}
-            image={card.image}
-            title={card.title}
-            description={card.description}
+            key={event.id}
+            image={event.image_url} // Render the image from the API response
+            title={event.title} // Render the title from the API response
+            description={event.description} // Render the description from the API response
           />
         ))}
       </div>
