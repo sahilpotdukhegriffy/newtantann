@@ -1,27 +1,12 @@
 .tinder {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* This hides any overflow when the card is swiped */
+  width: 80vw;
+  height: 80vh;
+  overflow: hidden;
   display: flex;
+  padding: 30px;
   flex-direction: column;
   position: relative;
-}
-
-.tinderCard {
-  width: 90vw;
-  max-width: 400px;
-  height: 70vh;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  position: absolute;
-  will-change: transform;
-  transition: all 0.3s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: grab;
+  perspective: 1000px; /* Add perspective to create the bending effect */
 }
 
 .tinderCard.moving {
@@ -39,4 +24,40 @@
   margin: 16px;
   text-align: center;
   pointer-events: none; /* Ensure text doesn't block the swipe */
+}
+
+.tinderCard {
+  width: 80%;
+  height: 80%;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: absolute;
+  will-change: transform;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.tinderCard .heart-icon,
+.tinderCard .cross-icon {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0) scale(0.5); /* Initially scaled down */
+  font-size: 100px;
+  opacity: 0; /* Icons are hidden initially */
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  z-index: 10; /* Ensure icons are on top of everything */
+}
+
+.heart-icon {
+  color: red;
+}
+
+.cross-icon {
+  color: black;
 }
