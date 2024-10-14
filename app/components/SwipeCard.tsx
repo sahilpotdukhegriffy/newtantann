@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import Image from "next/image";
 import styles from "./SwipeCard.module.css";
 
 interface SwipeCardProps {
@@ -10,23 +13,21 @@ interface SwipeCardProps {
 const SwipeCard: React.FC<SwipeCardProps> = ({ image, title, description }) => {
   return (
     <div className={styles.tinderCard}>
-      {/* Card Image */}
-      <img src={image} alt={title} className={styles.cardImage} />
+      {/* Use Next.js Image component instead of <img> */}
+      <Image
+        src={image}
+        alt={title}
+        width={600} // Example width, adjust according to your needs
+        height={400} // Example height, adjust according to your needs
+        className={styles.cardImage}
+      />
 
-      {/* Card Title and Description */}
       <h3>{title}</h3>
       <p>{description}</p>
 
-      {/* YES and NO Buttons */}
       <div className={styles.buttonsContainer}>
-        <button className={`${styles.button} ${styles.no}`}>
-          <span>NO</span>
-          <span>Potential Payout x1.75</span>
-        </button>
-        <button className={`${styles.button} ${styles.yes}`}>
-          <span>YES</span>
-          <span>Potential Payout x1.75</span>
-        </button>
+        <button className={`${styles.button} ${styles.no}`}>NO</button>
+        <button className={`${styles.button} ${styles.yes}`}>YES</button>
       </div>
 
       {/* Heart and Cross Icons */}

@@ -4,16 +4,16 @@ import React, { useState, useEffect } from "react";
 import SwipeCard from "./SwipeCard"; // Import the individual card component
 import Hammer from "hammerjs";
 import styles from "./SwipeCard.module.css";
-import { griffyApi } from "../axios/axiosInstance";
-import { openHeaders } from "../axios/Headers";
+import { griffyApi } from "../utils/griffyApi";
+import { openHeaders } from "../utils/Header";
 
-// Define the Event interface
 interface Poll {
   id: number;
   title: string;
   description: string;
   image_url: string;
 }
+
 interface FeedResponse {
   polls: Poll[];
 }
@@ -25,6 +25,7 @@ const TinderCards: React.FC = () => {
     getFeed(); // Fetch the events on component mount
   }, []);
 
+  // Fetch data from the API (client-side only)
   const getFeed = async () => {
     try {
       griffyApi.setHeaders(openHeaders); // Ensure headers are set
@@ -36,7 +37,10 @@ const TinderCards: React.FC = () => {
     }
   };
 
+  // Handle swipe gestures and DOM manipulation client-side only
   useEffect(() => {
+    if (typeof window === "undefined") return; // Ensure we are in the client
+
     const allCards = document.querySelectorAll(`.${styles.tinderCard}`);
 
     function initCards() {

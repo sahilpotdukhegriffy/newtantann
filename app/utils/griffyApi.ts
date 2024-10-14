@@ -8,10 +8,15 @@ export class GriffyAPI {
       baseURL: baseURL,
       timeout: 50000,
       headers: {
-        "Content-Type": "application/json",
-        ...headers,
+        "Content-Type": "application/json", // Default content type
+        ...headers, // Spread any custom headers passed
       },
     });
+  }
+
+  // Method to set headers dynamically
+  public setHeaders(headers: Record<string, string>): void {
+    Object.assign(this.axiosInstance.defaults.headers, headers);
   }
 
   // GET request
@@ -30,13 +35,9 @@ export class GriffyAPI {
   ): Promise<AxiosResponse<T>> {
     return this.axiosInstance.post<T>(url, data, config);
   }
-
-  // Set headers
-  public setHeaders(headers: Record<string, string>): void {
-    Object.assign(this.axiosInstance.defaults.headers, headers);
-  }
 }
 
+// Create a new instance of the GriffyAPI with the base URL
 export const griffyApi = new GriffyAPI(
   process.env.NEXT_PUBLIC_APP_BASE_URL as string
 );

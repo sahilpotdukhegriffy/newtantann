@@ -8,5 +8,8 @@ module.exports = {
   theme: {
     extend: {},
   },
+  images: {
+    domains: ["*"], // Add the external image domain here
+  },
   plugins: [],
 };
