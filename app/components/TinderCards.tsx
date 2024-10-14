@@ -72,37 +72,50 @@ const TinderCards: React.FC = () => {
       crossIcon.style.opacity = "0";
 
       const hammer = new Hammer(el as HTMLElement);
-      hammer.get("pan").set({ direction: Hammer.DIRECTION_HORIZONTAL }); // Only horizontal swiping
+      hammer.get("pan").set({ direction: Hammer.DIRECTION_ALL });
 
       hammer.on("pan", (event: HammerInput) => {
         (el as HTMLElement).classList.add("moving");
 
-        // Show icons only when swiping starts
         const swipeIntensity = Math.min(Math.abs(event.deltaX) / 100, 1);
 
-        if (event.deltaX > 0) {
-          // Right swipe - Show heart icon
-          heartIcon.style.opacity = "1";
-          crossIcon.style.opacity = "0";
-          heartIcon.style.transform = `translate(-50%, 0) scale(${
-            0.5 + swipeIntensity * 0.5
-          })`;
+        // Define the threshold (20px swipe movement or 20 degrees rotation)
+        const threshold = 80;
+
+        if (Math.abs(event.deltaX) > threshold) {
+          if (event.deltaX > 0) {
+            // Right swipe - Show heart icon
+            heartIcon.style.opacity = "1";
+            crossIcon.style.opacity = "0";
+            heartIcon.style.transform = `translate(-50%, 0) scale(${
+              0.5 + swipeIntensity * 0.5
+            })`;
+          } else if (event.deltaX < 0) {
+            // Left swipe - Show cross icon
+            crossIcon.style.opacity = "1";
+            heartIcon.style.opacity = "0";
+            crossIcon.style.transform = `translate(-50%, 0) scale(${
+              0.5 + swipeIntensity * 0.5
+            })`;
+          }
         } else {
-          // Left swipe - Show cross icon
-          crossIcon.style.opacity = "1";
+          // Hide the icons if movement is less than the threshold
           heartIcon.style.opacity = "0";
-          crossIcon.style.transform = `translate(-50%, 0) scale(${
-            0.5 + swipeIntensity * 0.5
-          })`;
+          crossIcon.style.opacity = "0";
         }
 
-        // Symmetric rotation for both left and right
-        const xMulti = event.deltaX * 0.03;
-        const rotateY = xMulti * 0.5;
-        const rotateX = Math.min(event.deltaX * 0.05, 10);
+        // Allow vertical and horizontal movement but limit vertical movement to stay within the container
+        const verticalLimit = 150; // Limit how far up or down the card can move
+        const deltaY = Math.max(
+          -verticalLimit,
+          Math.min(event.deltaY, verticalLimit)
+        );
 
-        // Apply horizontal translation and rotation
-        event.target.style.transform = `translate(${event.deltaX}px, 0px) rotate(${rotateY}deg) rotateX(${rotateX}deg)`;
+        const rotateY = event.deltaX * 0.03; // Horizontal rotation
+        const rotateX = event.deltaY * 0.03; // Vertical rotation
+
+        // Apply horizontal and vertical translation with rotation
+        event.target.style.transform = `translate(${event.deltaX}px, ${deltaY}px) rotate(${rotateY}deg) rotateX(${rotateX}deg)`;
       });
 
       hammer.on("panend", (event: HammerInput) => {
@@ -130,12 +143,15 @@ const TinderCards: React.FC = () => {
             console.log("Swiped left");
           }
 
-          // Move the card out of the screen
+          // Apply smooth and slow transition for swipe-out
           const endX = moveOutWidth;
           const toX = event.deltaX > 0 ? endX : -endX;
           const rotateY = event.deltaX * 0.03 * 0.5;
           const rotateX = Math.min(event.deltaX * 0.05, 10);
 
+          // Add smooth transition with longer duration and ease-out effect
+          (event.target as HTMLElement).style.transition =
+            "transform 0.6s ease-in-out";
           event.target.style.transform = `translate(${toX}px, 0px) rotate(${rotateY}deg) rotateX(${rotateX}deg)`;
           (event.target as HTMLElement).classList.add("removed");
           initCards();
