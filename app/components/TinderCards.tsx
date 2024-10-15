@@ -43,13 +43,18 @@ const TinderCards: React.FC = () => {
 
     const allCards = document.querySelectorAll(`.${styles.tinderCard}`);
 
+    // Initialize cards in correct order
     function initCards() {
       const newCards = document.querySelectorAll(
         `.${styles.tinderCard}:not(.removed)`
       );
-      newCards.forEach((card, index) => {
+
+      // Reverse the card order so the last card (index-wise) is at the bottom
+      const reversedCards = Array.from(newCards).reverse();
+
+      reversedCards.forEach((card, index) => {
         (card as HTMLElement).style.zIndex = (
-          newCards.length - index
+          reversedCards.length - index
         ).toString();
         (card as HTMLElement).style.transform = `scale(${
           (20 - index) / 20
@@ -158,6 +163,8 @@ const TinderCards: React.FC = () => {
         }
       });
     });
+
+    initCards(); // Initialize cards in the correct order when the page loads
   }, [eventData]); // Add eventData to the dependency array to re-run the effect when new data is fetched
 
   return (
