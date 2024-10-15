@@ -22,7 +22,6 @@ interface FeedResponse {
 
 const TinderCards: React.FC = () => {
   const [eventData, setEventData] = useState<Poll[]>([]);
-  let toastShown = false; // Toast flag outside loop
 
   useEffect(() => {
     getFeed(); // Fetch the events on component mount
@@ -146,16 +145,13 @@ const TinderCards: React.FC = () => {
           (event.target as HTMLElement).style.transform = "";
           console.log("Card brought back to the center.");
         } else {
-          // Log swipes based on direction and show toast once
-          if (!toastShown) {
-            if (event.deltaX > 0) {
-              console.log("Swiped right");
-              toast.success("Swiped right!");
-            } else {
-              console.log("Swiped left");
-              toast.error("Swiped left!");
-            }
-            toastShown = true; // Set the flag to true so the toast only shows once
+          // Log swipes based on direction and show toast for each swipe
+          if (event.deltaX > 0) {
+            console.log("Swiped right");
+            toast.success("Swiped right!");
+          } else {
+            console.log("Swiped left");
+            toast.error("Swiped left!");
           }
 
           // Apply smooth and slow transition for swipe-out
@@ -175,10 +171,6 @@ const TinderCards: React.FC = () => {
     });
 
     initCards(); // Initialize cards in the correct order when the page loads
-
-    return () => {
-      toastShown = false; // Reset toastShown when new swipe starts
-    };
   }, [eventData]); // Add eventData to the dependency array to re-run the effect when new data is fetched
 
   return (
