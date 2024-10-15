@@ -6,6 +6,8 @@ import Hammer from "hammerjs";
 import styles from "./SwipeCard.module.css";
 import { griffyApi } from "../utils/griffyApi";
 import { openHeaders } from "../utils/Header";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
 
 interface Poll {
   id: number;
@@ -20,6 +22,7 @@ interface FeedResponse {
 
 const TinderCards: React.FC = () => {
   const [eventData, setEventData] = useState<Poll[]>([]);
+  let toastShown = false; // Toast flag outside loop
 
   useEffect(() => {
     getFeed(); // Fetch the events on component mount
@@ -37,7 +40,6 @@ const TinderCards: React.FC = () => {
     }
   };
 
-  // Handle swipe gestures and DOM manipulation client-side only
   useEffect(() => {
     if (typeof window === "undefined") return; // Ensure we are in the client
 
@@ -120,6 +122,7 @@ const TinderCards: React.FC = () => {
         const rotateX = event.deltaY * 0.03; // Vertical rotation
 
         // Apply horizontal and vertical translation with rotation
+        event.target.style.transition = "transform 0.2s ease-out"; // Smooth transition during swipe
         event.target.style.transform = `translate(${event.deltaX}px, ${deltaY}px) rotate(${rotateY}deg) rotateX(${rotateX}deg)`;
       });
 
@@ -138,14 +141,21 @@ const TinderCards: React.FC = () => {
 
         if (keep) {
           // Swipe was not strong enough, reset the card position
+          (event.target as HTMLElement).style.transition =
+            "transform 0.4s ease-out"; // Smooth reset transition
           (event.target as HTMLElement).style.transform = "";
           console.log("Card brought back to the center.");
         } else {
-          // Log swipes based on direction
-          if (event.deltaX > 0) {
-            console.log("Swiped right");
-          } else {
-            console.log("Swiped left");
+          // Log swipes based on direction and show toast once
+          if (!toastShown) {
+            if (event.deltaX > 0) {
+              console.log("Swiped right");
+              toast.success("Swiped right!");
+            } else {
+              console.log("Swiped left");
+              toast.error("Swiped left!");
+            }
+            toastShown = true; // Set the flag to true so the toast only shows once
           }
 
           // Apply smooth and slow transition for swipe-out
@@ -156,7 +166,7 @@ const TinderCards: React.FC = () => {
 
           // Add smooth transition with longer duration and ease-out effect
           (event.target as HTMLElement).style.transition =
-            "transform 0.6s ease-in-out";
+            "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)"; // Smooth easing for swipe-out
           event.target.style.transform = `translate(${toX}px, 0px) rotate(${rotateY}deg) rotateX(${rotateX}deg)`;
           (event.target as HTMLElement).classList.add("removed");
           initCards();
@@ -165,6 +175,10 @@ const TinderCards: React.FC = () => {
     });
 
     initCards(); // Initialize cards in the correct order when the page loads
+
+    return () => {
+      toastShown = false; // Reset toastShown when new swipe starts
+    };
   }, [eventData]); // Add eventData to the dependency array to re-run the effect when new data is fetched
 
   return (
@@ -179,6 +193,9 @@ const TinderCards: React.FC = () => {
           />
         ))}
       </div>
+
+      {/* Add ToastContainer with position set to bottom-center */}
+      <ToastContainer position="bottom-center" />
     </div>
   );
 };
