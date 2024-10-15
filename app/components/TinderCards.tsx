@@ -39,6 +39,17 @@ const TinderCards: React.FC = () => {
     }
   };
 
+  // Remove the card when the Skip button is clicked
+  const handleSkip = (index: number) => {
+    // Remove the card from the list
+    const newEventData = [...eventData];
+    newEventData.splice(index, 1); // Remove the skipped card
+    setEventData(newEventData);
+
+    // Display a toast notification
+    toast.info("Card skipped!");
+  };
+
   useEffect(() => {
     if (typeof window === "undefined") return; // Ensure we are in the client
 
@@ -176,12 +187,13 @@ const TinderCards: React.FC = () => {
   return (
     <div className={styles.tinder}>
       <div className={styles.cards}>
-        {eventData.map((event) => (
+        {eventData.map((event, index) => (
           <SwipeCard
             key={event.id}
             image={event.image_url} // Render the image from the API response
             title={event.title} // Render the title from the API response
             description={event.description} // Render the description from the API response
+            onSkip={() => handleSkip(index)} // Pass the handleSkip function to remove the card
           />
         ))}
       </div>

@@ -1,34 +1,29 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
 import styles from "./SwipeCard.module.css";
 
 interface SwipeCardProps {
   image: string;
   title: string;
   description: string;
+  onSkip: () => void; // Prop to handle Skip button click
 }
 
-const SwipeCard: React.FC<SwipeCardProps> = ({ image, title, description }) => {
+const SwipeCard: React.FC<SwipeCardProps> = ({
+  image,
+  title,
+  description,
+  onSkip,
+}) => {
   return (
     <div className={styles.tinderCard}>
-      {/* Use Next.js Image component instead of <img> */}
-      <Image
-        src={image}
-        alt={title}
-        width={600} // Example width, adjust according to your needs
-        height={400} // Example height, adjust according to your needs
-        className={styles.cardImage}
-      />
-
+      <img src={image} alt={title} className={styles.cardImage} />
       <h3>{title}</h3>
       <p>{description}</p>
 
-      <div className={styles.buttonsContainer}>
-        <button className={`${styles.button} ${styles.no}`}>NO</button>
-        <button className={`${styles.button} ${styles.yes}`}>YES</button>
-      </div>
+      {/* Add Skip Button */}
+      <button className={styles.skipButton} onClick={onSkip}>
+        Skip
+      </button>
 
       {/* Heart and Cross Icons */}
       <div className={`${styles.heartIcon} heart-icon`}>
